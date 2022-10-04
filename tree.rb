@@ -24,6 +24,20 @@ class Tree
     build_tree_rec(array)
   end
 
+  def insert_rec(node, tree)
+    return node if tree.nil?
+
+    tree.right = insert_rec(node, tree.right) if node.value > tree.value
+    tree.left = insert_rec(node, tree.left) if node.value < tree.value
+    tree
+  end
+
+  def insert(value)
+    node = Node.new(value)
+    tree = @root
+    @root = insert_rec(node, tree)
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
