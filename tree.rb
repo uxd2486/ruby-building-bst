@@ -20,8 +20,7 @@ class Tree
   end
 
   def find(value)
-    tree = @root
-    nodes = [tree]
+    nodes = [@root]
     until nodes.empty?
       cur_node = nodes.delete_at(0)
       return cur_node if cur_node.value == value
@@ -30,6 +29,23 @@ class Tree
       nodes.append(cur_node.right) unless cur_node.right.nil?
     end
     nil
+  end
+
+  def level_order
+    queue = [@root]
+    nodes = []
+    until queue.empty?
+      cur_node = queue.delete_at(0)
+      if block_given?
+        yield(cur_node)
+      else
+        nodes << cur_node
+      end
+
+      queue.append(cur_node.left) unless cur_node.left.nil?
+      queue.append(cur_node.right) unless cur_node.right.nil?
+    end
+    nodes
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -100,7 +116,6 @@ end
 
 tree = Tree.new([1, 5, 2, 9, 8, 3])
 tree.pretty_print
-puts tree.find(5)
-puts tree.find(2)
-puts tree.find(8)
-puts tree.find(11)
+puts tree.level_order
+puts
+tree.level_order { |node| puts node }
