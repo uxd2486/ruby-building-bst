@@ -64,6 +64,10 @@ class Tree
     height_rec(node, 0)
   end
 
+  def depth(node)
+    depth_rec(node, @root, 0)
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
@@ -167,10 +171,17 @@ class Tree
     right_height > max_height ? right_height : max_height
   end
 
+  def depth_rec(target, node, depth)
+    return nil if node.nil?
+    return depth if target.value == node.value
+
+    depth_rec(target, node.left, depth + 1) || depth_rec(target, node.right, depth + 1)
+  end
+
 end
 
 tree = Tree.new([1, 5, 2, 9, 8, 3])
 tree.pretty_print
-puts tree.height(tree.find(5))
-puts tree.height(tree.find(2))
-puts tree.height(tree.find(8))
+puts tree.depth(tree.find(5))
+puts tree.depth(tree.find(9))
+puts tree.depth(tree.find(1))
