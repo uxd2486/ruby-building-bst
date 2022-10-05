@@ -72,6 +72,10 @@ class Tree
     balanced_rec(@root)
   end
 
+  def rebalance
+    @root = build_tree(preorder)
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
@@ -196,5 +200,8 @@ tree.pretty_print
 puts tree.balanced?
 array = Array.new(10) { rand(10..100) }
 array.each { |num| tree.insert(num) }
+tree.pretty_print
+puts tree.balanced?
+tree.rebalance
 tree.pretty_print
 puts tree.balanced?
