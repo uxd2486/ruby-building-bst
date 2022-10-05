@@ -195,13 +195,37 @@ class Tree
 
 end
 
-tree = Tree.new([5, 9])
-tree.pretty_print
-puts tree.balanced?
-array = Array.new(10) { rand(10..100) }
-array.each { |num| tree.insert(num) }
-tree.pretty_print
-puts tree.balanced?
+def print_all_orders(tree)
+  print 'Elements in pre order: '
+  tree.preorder { |node| print " #{node} " }
+  puts
+  print 'Elements in post order: '
+  tree.postorder { |node| print " #{node} " }
+  puts
+  print 'Elements in order: '
+  tree.inorder { |node| print " #{node} " }
+  puts
+end
+
+def check_balance(tree)
+  print 'Is the tree balanced? '
+  puts tree.balanced?
+end
+
+tree = Tree.new(Array.new(15) { rand(1..100) })
+check_balance(tree)
+puts
+print_all_orders(tree)
+puts
+puts 'Inserting many elements to unbalance tree..'
+unbalance_array = Array.new(15) { rand(100..10_000) }
+unbalance_array.each { |value| tree.insert(value) }
+print 'Elements in pre order: '
+tree.preorder { |node| print " #{node} " }
+puts
+check_balance(tree)
+puts
+puts 'Re-balancing the tree..'
 tree.rebalance
-tree.pretty_print
-puts tree.balanced?
+check_balance(tree)
+print_all_orders(tree)
