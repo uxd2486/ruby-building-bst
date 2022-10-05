@@ -60,6 +60,10 @@ class Tree
     postorder_rec(@root, [], &block)
   end
 
+  def height(node)
+    height_rec(node, 0)
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
@@ -152,10 +156,21 @@ class Tree
     array
   end
 
+  def height_rec(node, height)
+    return height - 1 if node.nil?
+
+    max_height = height
+    left_height = height_rec(node.left, height + 1)
+    max_height = left_height if left_height > max_height
+
+    right_height = height_rec(node.right, height + 1)
+    right_height > max_height ? right_height : max_height
+  end
+
 end
 
 tree = Tree.new([1, 5, 2, 9, 8, 3])
 tree.pretty_print
-tree.postorder { |node| puts node }
-puts
-puts tree.postorder
+puts tree.height(tree.find(5))
+puts tree.height(tree.find(2))
+puts tree.height(tree.find(8))
