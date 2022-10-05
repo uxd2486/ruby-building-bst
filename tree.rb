@@ -68,6 +68,10 @@ class Tree
     depth_rec(node, @root, 0)
   end
 
+  def balanced?
+    balanced_rec(@root)
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
@@ -178,10 +182,19 @@ class Tree
     depth_rec(target, node.left, depth + 1) || depth_rec(target, node.right, depth + 1)
   end
 
+  def balanced_rec(node)
+    return true if node.nil?
+    return false if (height(node.left) - height(node.right)).abs > 1
+
+    balanced_rec(node.left) || balanced_rec(node.right)
+  end
+
 end
 
-tree = Tree.new([1, 5, 2, 9, 8, 3])
+tree = Tree.new([5, 9])
 tree.pretty_print
-puts tree.depth(tree.find(5))
-puts tree.depth(tree.find(9))
-puts tree.depth(tree.find(1))
+puts tree.balanced?
+array = Array.new(10) { rand(10..100) }
+array.each { |num| tree.insert(num) }
+tree.pretty_print
+puts tree.balanced?
