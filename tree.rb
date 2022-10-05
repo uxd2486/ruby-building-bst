@@ -52,6 +52,10 @@ class Tree
     inorder_rec(@root, [], &block)
   end
 
+  def preorder(&block)
+    preorder_rec(@root, [], &block)
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
@@ -125,10 +129,19 @@ class Tree
     inorder_rec(node.right, array, &block)
   end
 
+  def preorder_rec(node, array, &block)
+    return array if node.nil?
+
+    block.call(node) if block_given?
+    array << node
+    array = preorder_rec(node.left, array, &block)
+    preorder_rec(node.right, array, &block)
+  end
+
 end
 
 tree = Tree.new([1, 5, 2, 9, 8, 3])
 tree.pretty_print
-tree.inorder { |node| puts node }
+tree.preorder { |node| puts node }
 puts
-puts tree.inorder
+puts tree.preorder
