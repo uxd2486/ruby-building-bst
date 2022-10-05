@@ -15,4 +15,8 @@ class Node
     @left = nil
     @right = nil
   end
+
+  def to_s
+    @value.to_s
+  end
 end
