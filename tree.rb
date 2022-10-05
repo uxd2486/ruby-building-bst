@@ -8,6 +8,25 @@ class Tree
     @root = build_tree(array)
   end
 
+  def insert(value)
+    node = Node.new(value)
+    tree = @root
+    @root = insert_rec(node, tree)
+  end
+
+  def delete(value)
+    tree = @root
+    @root = delete_rec(value, tree)
+  end
+
+  def pretty_print(node = @root, prefix = '', is_left = true)
+    pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
+    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
+    pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
+  end
+
+  private
+
   def build_tree_rec(sorted)
     return nil if sorted.empty?
 
@@ -32,15 +51,42 @@ class Tree
     tree
   end
 
-  def insert(value)
-    node = Node.new(value)
-    tree = @root
-    @root = insert_rec(node, tree)
+  def find_min_node(node)
+    current = node
+    current = current.left until current.left.nil?
+    current
   end
 
-  def pretty_print(node = @root, prefix = '', is_left = true)
-    pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
-    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
-    pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
+  def delete_node(root)
+    if root.left.nil?
+      root.right
+    elsif root.right.nil?
+      root.left
+    else
+      temp = find_min_node(root.right)
+      root.value = temp.value
+      root.right = delete_rec(temp.value, root.right)
+      root
+    end
   end
+
+  def delete_rec(value, tree)
+    return nil if tree.nil?
+
+    if tree.value == value
+      tree = delete_node(tree)
+    elsif tree.value > value
+      tree.left = delete_rec(value, tree.left)
+    else
+      tree.right = delete_rec(value, tree.right)
+    end
+    tree
+  end
+
 end
+
+tree = Tree.new([1, 5, 2, 9, 8, 3])
+tree.pretty_print
+puts
+tree.delete(2)
+tree.pretty_print
