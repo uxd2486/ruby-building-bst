@@ -19,6 +19,19 @@ class Tree
     @root = delete_rec(value, tree)
   end
 
+  def find(value)
+    tree = @root
+    nodes = [tree]
+    until nodes.empty?
+      cur_node = nodes.delete_at(0)
+      return cur_node if cur_node.value == value
+
+      nodes.append(cur_node.left) unless cur_node.left.nil?
+      nodes.append(cur_node.right) unless cur_node.right.nil?
+    end
+    nil
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
@@ -87,6 +100,7 @@ end
 
 tree = Tree.new([1, 5, 2, 9, 8, 3])
 tree.pretty_print
-puts
-tree.delete(2)
-tree.pretty_print
+puts tree.find(5)
+puts tree.find(2)
+puts tree.find(8)
+puts tree.find(11)
